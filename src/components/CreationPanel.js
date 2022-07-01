@@ -15,12 +15,12 @@ export default function CreationPanel() {
 
     const showSessions = sessions.map(
         (session) => 
-        <li key={session.id}>
+        <li key={session.sessionId}>
             {session.name}
-            <Link to={"/publisher"} state={{ id: session.id }}>
+            <Link to={"/publisher"} state={{ id: session.sessionId }}>
                 <button>publish</button>
             </Link>
-            <Link to={"/subscriber"} state={{ id: session.id }}>
+            <Link to={"/subscriber"} state={{ id: session.sessionId }}>
                 <button>subscribe</button>
             </Link>
         </li>
@@ -29,6 +29,9 @@ export default function CreationPanel() {
     const handleCreation = () => {
         axios.post('http://localhost:8080/createSession', {
             name: name
+        }).then((result) => {
+            var session = {name: name, sessionId: result.data}
+            setSessions([...sessions, session])
         })
     }
 

@@ -51,14 +51,15 @@ app.get('/', (req, res) => {
 app.post('/createSession', (req, res) => {
     opentok.createSession(function (err, session) {
         if (err) return console.log(err);
-        db.query('INSERT INTO session (id, name) VALUES ("'+session.sessionId+'", "'+req.body.name+'")', (error, results, fields) => {
+        db.query('INSERT INTO session (sessionId, name) VALUES ("'+session.sessionId+'", "'+req.body.name+'")', (error, results, fields) => {
             if (error) throw error;
+            res.send(session.sessionId)
         })
     });
 })
 
 app.get('/sessions', (req, res) => {
-    db.query('SELECT * FROM session ORDER BY name', (error, results, fields) => {
+    db.query('SELECT * FROM session', (error, results, fields) => {
         if (error) throw error;
         results = JSON.parse(JSON.stringify(results));
         res.send(results)
