@@ -9,7 +9,7 @@ const apiSecret = process.env.API_SECRET
 
 const app = express()
 const opentok = new OpenTok(apiKey, apiSecret)
-const port = process.env.PORT
+const port = 8080
 
 app.options('*', cors())
 app.use(function (req, res, next) {
