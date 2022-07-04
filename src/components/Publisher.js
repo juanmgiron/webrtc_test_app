@@ -8,7 +8,9 @@ export default function Publisher(){
   const sessionId = location.state.id;
   const [token, setToken] = useState();
   const [video, setVideo] = useState(false);
+  const [message, setMessage] = useState('');
   const publisher = useRef();
+  const session = useRef();
 
   useEffect(() => {
     axios.post('http://localhost:8080/token', {
@@ -23,14 +25,30 @@ export default function Publisher(){
     setVideo(!video)
   }
 
+  const sendMessage = () => {
+    session.current.sessionHelper.session.signal({
+      type: 'msg',
+      data: message
+    }, function(error) {
+      if (error) {
+        console.log('Error sending signal:', error.name, error.message);
+      } else {
+        setMessage('')
+      }
+    })
+  }
+
   return(
     token ?
     <div id="videos">
-      <OTSession apiKey="47527401" sessionId={sessionId} token={token}>
+      <OTSession apiKey="47527401" sessionId={sessionId} token={token} ref={session}>
         <OTPublisher ref={publisher} />
       </OTSession>
       <p>publishing...</p>
       <button onClick={handleVideo}>{video ? "turn on video" : "turn off video"}</button>
+      <br/>
+      <input value={message} onChange={(e) => setMessage(e.target.value)} type='text'/>
+      <button onClick={sendMessage}>{"send message"}</button>
     </div> : null
   )
 }
