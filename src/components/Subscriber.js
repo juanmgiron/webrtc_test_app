@@ -20,7 +20,8 @@ export default function Subscriber(){
 
   const eventHandlers = {
     'signal:msg': event => {
-      messagesRef.current = [...messagesRef.current, event.data]
+      var msg = event.data.name + ': ' + event.data.message
+      messagesRef.current = [...messagesRef.current, msg]
       setMessages(messagesRef.current)
     }
   }
@@ -35,7 +36,7 @@ export default function Subscriber(){
           <OTSubscriber />
         </OTStreams>
       </OTSession>
-      <div style={{border: '2px solid black', height: 100, overflow: 'scroll'}}>
+      <div style={{border: '2px solid black', height: 100, overflow: 'scroll', display: 'flex', flexDirection: 'column-reverse'}}>
         <ul style={{listStyleType: 'none'}}>
           {showMessages}
         </ul>
