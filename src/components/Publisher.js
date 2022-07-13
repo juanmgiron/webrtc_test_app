@@ -1,17 +1,13 @@
-import { OTSession, OTPublisher } from 'opentok-react';
 import axios from "axios";
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from "react-router-dom";
+import PublisherVideo from './PublisherVideo';
 
 export default function Publisher(){
   const location = useLocation();
   const sessionId = location.state.id;
   const [token, setToken] = useState();
-  const [video, setVideo] = useState(false);
-  const [message, setMessage] = useState('');
   const name = useRef();
-  const publisher = useRef();
-  const session = useRef();
 
   useEffect(() => {
     name.current = 'user' + Math.floor((Math.random() * 1000) + 1);
@@ -22,39 +18,8 @@ export default function Publisher(){
     })
   },[])
 
-  const handleVideo = () => {
-    publisher.current.getPublisher().publishVideo(video)
-    setVideo(!video)
-  }
-
-  const sendMessage = () => {
-    session.current.sessionHelper.session.signal({
-      type: 'msg',
-      data: {
-        message,
-        name: name.current
-      }
-    }, function(error) {
-      if (error) {
-        console.log('Error sending signal:', error.name, error.message);
-      } else {
-        setMessage('')
-      }
-    })
-  }
-
   return(
     token ?
-    <div id="videos">
-      <OTSession apiKey="47527401" sessionId={sessionId} token={token} ref={session}>
-        <OTPublisher ref={publisher} properties={{name: name.current}}/>
-      </OTSession>
-      <p>publishing...</p>
-      <button onClick={handleVideo}>{video ? "turn on video" : "turn off video"}</button>
-      <br/>
-      <input value={message} onChange={(e) => setMessage(e.target.value)} type='text'/>
-      <button onClick={sendMessage}>{"send message"}</button>
-      <br/>
-    </div> : null
+    <PublisherVideo token={token} sessionId={sessionId} name={name.current} /> : null
   )
 }
