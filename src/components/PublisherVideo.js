@@ -6,14 +6,14 @@ import { drawLandmarks } from '@mediapipe/drawing_utils';
 
 export default function PublisherVideo(props){
     const [video, setVideo] = useState(false);
-    const [message, setMessage] = useState('');
-    const [name, setName] = useState('')
+    const hand = useRef(false);
+    const name = useRef();
     const publisher = useRef();
     const session = useRef();
     const canvasRef = useRef();
 
     useEffect(() => {
-        setName(props.name)
+        name.current = props.name
     },[])
 
     const handleVideo = () => {
@@ -25,14 +25,11 @@ export default function PublisherVideo(props){
         session.current.sessionHelper.session.signal({
             type: 'msg',
             data: {
-                message,
-                name: name
+                name: name.current
             }
         }, function(error) {
             if (error) {
                 console.log('Error sending signal:', error.name, error.message);
-            } else {
-                setMessage('')
             }
         })
     }
@@ -44,6 +41,19 @@ export default function PublisherVideo(props){
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
         drawLandmarks(canvasCtx, results.poseLandmarks, {color: '#FF0000', lineWidth: 2, radius: 0.5})
         canvasCtx.restore();
+        if (results.poseLandmarks) {
+            var rightHand = results.poseLandmarks[16].y;
+            var leftHand = results.poseLandmarks[15].y;
+            var nose = results.poseLandmarks[0].y
+            if (rightHand < nose || leftHand < nose) {
+                if (!hand.current) {
+                    sendMessage("hand raised")
+                }
+                hand.current = true
+            } else {
+                hand.current = false
+            }
+        }
     }
 
     const detectPose = (element) => {
@@ -86,16 +96,13 @@ export default function PublisherVideo(props){
                 style={{
                     position: "fixed",
                     left: 8,
-                    top: 8,
+                    top: 6,
                     width: 640,
                     height: 480,
                 }}
             ></canvas>
             <p>publishing...</p>
             <button onClick={handleVideo}>{video ? "turn on video" : "turn off video"}</button>
-            <br/>
-            <input value={message} onChange={(e) => setMessage(e.target.value)} type='text'/>
-            <button onClick={sendMessage}>{"send message"}</button>
         </div>
     )
 }

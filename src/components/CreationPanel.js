@@ -7,7 +7,7 @@ export default function CreationPanel() {
     const [sessions, setSessions] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:8080/sessions')
+        axios.get('/sessions')
             .then((results) => {
                 setSessions(results.data)
             })
@@ -15,19 +15,27 @@ export default function CreationPanel() {
 
     const showSessions = sessions.map(
         (session) => 
-        <li key={session.sessionId}>
-            {session.name}
-            <Link to={"/publisher"} state={{ id: session.sessionId }}>
-                <button>publish</button>
-            </Link>
-            <Link to={"/subscriber"} state={{ id: session.sessionId }}>
-                <button>subscribe</button>
-            </Link>
+        <li key={session.sessionId} className="list-group-item">
+            <div className="row">
+                <div className="col-sm" align="center">
+                    {session.name}
+                </div>
+                <div className="col-sm" align="center">
+                    <Link to={"/publisher"} state={{ id: session.sessionId }}>
+                        <button className="btn btn-primary">publish</button>
+                    </Link>
+                </div>
+                <div className="col-sm" align="center">
+                    <Link to={"/subscriber"} state={{ id: session.sessionId }}>
+                        <button className="btn btn-primary">subscribe</button>
+                    </Link>
+                </div>
+            </div>
         </li>
     )
 
     const handleCreation = () => {
-        axios.post('http://localhost:8080/createSession', {
+        axios.post('/createSession', {
             name: name
         }).then((result) => {
             var session = {name: name, sessionId: result.data}
@@ -36,10 +44,14 @@ export default function CreationPanel() {
     }
 
     return (
-        <div>
-            <input value={name} onChange={(e) => setName(e.target.value)} type='text'/>
-            <button onClick={handleCreation}>create session</button>
-            <ul>
+        <div className="container">
+            <div className="input-group mb-3 my-5">
+                <input value={name} onChange={(e) => setName(e.target.value)} type='text' className="form-control"/>
+                <div className="input-group-append">
+                    <button onClick={handleCreation} className="btn btn-outline-secondary">create session</button>
+                </div>
+            </div>
+            <ul className="list-group">
                 {showSessions}
             </ul>
         </div>

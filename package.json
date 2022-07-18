@@ -17,6 +17,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "localtunnel": "^2.0.2",
     "mysql": "^2.18.1",
     "opentok": "^2.14.3",
     "opentok-react": "^0.11.0",
@@ -28,6 +29,7 @@
     "use-sound": "^4.0.1",
     "web-vitals": "^2.1.4"
   },
+  "proxy":"http://192.168.0.108:8080",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

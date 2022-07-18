@@ -11,7 +11,7 @@ export default function Publisher(){
 
   useEffect(() => {
     name.current = 'user' + Math.floor((Math.random() * 1000) + 1);
-    axios.post('http://localhost:8080/token', {
+    axios.post('/token', {
       id: sessionId
     }).then((result) => {
       setToken(result.data)
