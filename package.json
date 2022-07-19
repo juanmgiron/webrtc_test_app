@@ -3,10 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
     "@mediapipe/camera_utils": "^0.3.1640029074",
     "@mediapipe/face_detection": "^0.4.1646425229",
     "@mediapipe/face_mesh": "^0.4.1633559619",
     "@mediapipe/pose": "^0.5.1635988162",
+    "@mui/icons-material": "^5.8.4",
+    "@mui/material": "^5.9.1",
     "@opentok/client": "^2.22.5",
     "@tensorflow-models/posenet": "^2.2.2",
     "@tensorflow/tfjs": "^3.18.0",
@@ -29,7 +33,7 @@
     "use-sound": "^4.0.1",
     "web-vitals": "^2.1.4"
   },
-  "proxy":"http://192.168.0.108:8080",
+  "proxy": "http://192.168.0.104:8080",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

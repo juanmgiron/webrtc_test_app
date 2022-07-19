@@ -2,14 +2,17 @@ import { createSession, OTSubscriber } from 'opentok-react';
 import axios from "axios";
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from "react-router-dom";
+import { Button } from '@mui/material';
+import HandsDialog from './HandsDialog';
 
 export default function Subscriber(){
   const location = useLocation();
   const sessionId = location.state.id;
   const [token, setToken] = useState();
-  const [messages, setMessages] = useState([]);
   const [streams, setStreams] = useState([]);
-  const messagesRef = useRef(messages);
+  const [open, setOpen] = useState(false);
+  const [hands, setHands] = useState([])
+  const handsRef = useRef(hands);
   const streamsRef = useRef(streams);
   const session = useRef();
 
@@ -23,20 +26,29 @@ export default function Subscriber(){
         token: result.data,
         onStreamsUpdated: streams => {}
       })
-      session.current.session.on('signal:msg', event => {
-        var msg = event.data.name + ' raised their hand'
-        messagesRef.current = [...messagesRef.current, msg]
-        setMessages(messagesRef.current)
+      session.current.session.on('signal:handUp', event => {
+        var obj = {id: event.from.id, name: event.data.name}
+        handsRef.current = [...handsRef.current, obj]
+        setHands(handsRef.current)
+      })
+      session.current.session.on('signal:handDown', event => {
+        handsRef.current = handsRef.current.filter(data => data.id != event.from.id);
+        setHands(handsRef.current)
       })
       session.current.session.on('streamCreated', event => {
+        console.log(event)
         streamsRef.current = [...streamsRef.current, event.stream]
         setStreams(streamsRef.current)
+      })
+      session.current.session.on('streamDestroyed', event => {
+        handsRef.current = handsRef.current.filter(data => data.id != event.stream.connection.id);
+        setHands(handsRef.current)
       })
       setToken(result.data)
     })
   },[])
 
-  const showMessages = messages.map((message) => <li>{message}</li>)
+  const handleClose = () => setOpen(false)
 
   return(
     token ?
@@ -54,11 +66,12 @@ export default function Subscriber(){
           );
         })}
       </div>
-      <div style={{border: '2px solid black', height: 100, overflow: 'scroll', display: 'flex', flexDirection: 'column-reverse'}}>
-        <ul style={{listStyleType: 'none'}}>
-          {showMessages}
-        </ul>
-      </div>
+      <Button onClick={() => setOpen(true)} variant="outlined" style={{position: "absolute", right: 50, bottom: 50}}>{"Raised hands: " + hands.length}</Button>
+      <HandsDialog 
+        open={open}
+        onClose={handleClose}
+        users={hands}
+      />
     </div> : null
   )
 }

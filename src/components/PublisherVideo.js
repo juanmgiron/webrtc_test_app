@@ -21,9 +21,12 @@ export default function PublisherVideo(props){
         setVideo(!video)
     }
 
-    const sendMessage = () => {
+    const handUp = () => sendMessage('handUp')
+    const handDown = () => sendMessage('handDown')
+
+    const sendMessage = (type) => {
         session.current.sessionHelper.session.signal({
-            type: 'msg',
+            type: type,
             data: {
                 name: name.current
             }
@@ -47,10 +50,13 @@ export default function PublisherVideo(props){
             var nose = results.poseLandmarks[0].y
             if (rightHand < nose || leftHand < nose) {
                 if (!hand.current) {
-                    sendMessage("hand raised")
+                    handUp()
                 }
                 hand.current = true
             } else {
+                if (hand.current) {
+                    handDown()
+                }
                 hand.current = false
             }
         }
