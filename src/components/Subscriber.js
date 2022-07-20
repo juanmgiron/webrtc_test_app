@@ -2,7 +2,7 @@ import { createSession, OTSubscriber } from 'opentok-react';
 import axios from "axios";
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from "react-router-dom";
-import { Button } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import HandsDialog from './HandsDialog';
 
 export default function Subscriber(){
@@ -36,13 +36,14 @@ export default function Subscriber(){
         setHands(handsRef.current)
       })
       session.current.session.on('streamCreated', event => {
-        console.log(event)
         streamsRef.current = [...streamsRef.current, event.stream]
         setStreams(streamsRef.current)
       })
       session.current.session.on('streamDestroyed', event => {
         handsRef.current = handsRef.current.filter(data => data.id != event.stream.connection.id);
         setHands(handsRef.current)
+        streamsRef.current = streamsRef.current.filter(data => data.id != event.stream.id)
+        setStreams(streamsRef.current)
       })
       setToken(result.data)
     })
@@ -52,20 +53,20 @@ export default function Subscriber(){
 
   return(
     token ?
-    <div id="videos" className='container-fluid main-container' style={{float:"left"}}>
-      <div className="row">
+    <div>
+      <Grid container spacing={2}>
         {streams.map(stream => {
           return (
-            <div className="col-sm">
+            <Grid item xs={4}>
               <OTSubscriber
                 key={stream.id}
                 session={session.current.session}
                 stream={stream}
               />
-            </div>
+            </Grid>
           );
         })}
-      </div>
+      </Grid>
       <Button onClick={() => setOpen(true)} variant="outlined" style={{position: "absolute", right: 50, bottom: 50}}>{"Raised hands: " + hands.length}</Button>
       <HandsDialog 
         open={open}
