@@ -2,19 +2,23 @@ import { createSession, OTSubscriber } from 'opentok-react';
 import axios from "axios";
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from "react-router-dom";
-import { Button, Grid } from '@mui/material';
+import { Button } from '@mui/material';
 import HandsDialog from './HandsDialog';
+import initLayoutContainer from 'opentok-layout-js';
 
 export default function Subscriber(){
   const location = useLocation();
   const sessionId = location.state.id;
-  const [token, setToken] = useState();
   const [streams, setStreams] = useState([]);
   const [open, setOpen] = useState(false);
   const [hands, setHands] = useState([])
   const handsRef = useRef(hands);
   const streamsRef = useRef(streams);
   const session = useRef();
+  const layout = initLayoutContainer({
+    containerWidth: 1376,
+    containerHeight: 811
+  });
 
   useEffect(() => {
     axios.post('/token', {
@@ -45,34 +49,44 @@ export default function Subscriber(){
         streamsRef.current = streamsRef.current.filter(data => data.id != event.stream.id)
         setStreams(streamsRef.current)
       })
-      setToken(result.data)
     })
   },[])
 
   const handleClose = () => setOpen(false)
 
+  const handleLayout = () => {
+    var count = streamsRef.current.length;
+    var subscribers = [];
+    for (var i = 0; i < count; i++) {
+      subscribers.push({
+        width: 640,
+        height: 480,
+        big: false
+      })
+    }
+    var { boxes } = layout.getLayout(subscribers);
+    var screens = [];
+    for (var i = 0; i < count; i++) {
+      screens.push(<OTSubscriber
+        key={streams[i].id}
+        session={session.current.session}
+        stream={streams[i]}
+        properties={{height: boxes[i].height, width: boxes[i].width}}
+        style={{position: "absolute", top: boxes[i].top, left: boxes[i].left}}
+      />)
+    }
+    return <div id="layout" style={{position: "absolute", left: 0, top: 0, right: 0, bottom: 150}}>{screens}</div>
+  }
+
   return(
-    token ?
     <div>
-      <Grid container spacing={2}>
-        {streams.map(stream => {
-          return (
-            <Grid item xs={4}>
-              <OTSubscriber
-                key={stream.id}
-                session={session.current.session}
-                stream={stream}
-              />
-            </Grid>
-          );
-        })}
-      </Grid>
+      {handleLayout()}
       <Button onClick={() => setOpen(true)} variant="outlined" style={{position: "absolute", right: 50, bottom: 50}}>{"Raised hands: " + hands.length}</Button>
       <HandsDialog 
         open={open}
         onClose={handleClose}
         users={hands}
       />
-    </div> : null
+    </div>
   )
 }

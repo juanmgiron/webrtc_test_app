@@ -7060,6 +7060,11 @@
     "is-docker" "^2.1.1"
     "is-wsl" "^2.2.0"
 
+"opentok-layout-js@^5.1.0":
+  "integrity" "sha512-6R7bfoXCa1wktrppUvbfy8K0dLKa/hK33Zkn83frDEIcFz+SbALiXoPo/ZIVnn3QXVtbdigeBPjQpFvFou01IQ=="
+  "resolved" "https://registry.npmjs.org/opentok-layout-js/-/opentok-layout-js-5.1.0.tgz"
+  "version" "5.1.0"
+
 "opentok-react@^0.11.0":
   "integrity" "sha512-rgMgS4HX0jrwKLOlQIYPx0zfg+unzegLUwWETpW/MemDboZ74KF4Q/iY6Vna7F6dni8gnU0+PWiwJ+EnsR5KAw=="
   "resolved" "https://registry.npmjs.org/opentok-react/-/opentok-react-0.11.0.tgz"
