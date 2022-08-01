@@ -68,7 +68,11 @@ app.get('/sessions', (req, res) => {
 
 app.post('/token', (req, res) => {
     token = opentok.generateToken(req.body.id)
-    res.send(token)
+    const results = {
+        token,
+        key: apiKey
+    }
+    res.send(results)
 })
 
 app.listen(port, () => {

@@ -6,7 +6,7 @@ import PublisherVideo from './PublisherVideo';
 export default function Publisher(){
   const location = useLocation();
   const sessionId = location.state.id;
-  const [token, setToken] = useState();
+  const [credentials, setCredentials] = useState();
   const name = useRef();
 
   useEffect(() => {
@@ -14,12 +14,15 @@ export default function Publisher(){
     axios.post('/token', {
       id: sessionId
     }).then((result) => {
-      setToken(result.data)
+      setCredentials({
+        key: result.data.key,
+        token: result.data.token
+      })
     })
   },[])
 
   return(
-    token ?
-    <PublisherVideo token={token} sessionId={sessionId} name={name.current} /> : null
+    credentials ?
+    <PublisherVideo token={credentials.token} apiKey={credentials.key} sessionId={sessionId} name={name.current} /> : null
   )
 }

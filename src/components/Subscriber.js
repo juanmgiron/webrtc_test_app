@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from "react-router-dom";
 import { Button } from '@mui/material';
 import HandsDialog from './HandsDialog';
-import initLayoutContainer from 'opentok-layout-js';
 
 export default function Subscriber(){
   const location = useLocation();
@@ -15,19 +14,15 @@ export default function Subscriber(){
   const handsRef = useRef(hands);
   const streamsRef = useRef(streams);
   const session = useRef();
-  const layout = initLayoutContainer({
-    containerWidth: 1376,
-    containerHeight: 811
-  });
 
   useEffect(() => {
     axios.post('/token', {
       id: sessionId
     }).then((result) => {
       session.current = createSession({
-        apiKey: '47527401',
+        apiKey: result.data.key,
         sessionId: sessionId,
-        token: result.data,
+        token: result.data.token,
         onStreamsUpdated: streams => {}
       })
       session.current.session.on('signal:handUp', event => {
@@ -56,23 +51,14 @@ export default function Subscriber(){
 
   const handleLayout = () => {
     var count = streamsRef.current.length;
-    var subscribers = [];
-    for (var i = 0; i < count; i++) {
-      subscribers.push({
-        width: 640,
-        height: 480,
-        big: false
-      })
-    }
-    var { boxes } = layout.getLayout(subscribers);
     var screens = [];
     for (var i = 0; i < count; i++) {
       screens.push(<OTSubscriber
         key={streams[i].id}
         session={session.current.session}
         stream={streams[i]}
-        properties={{height: boxes[i].height, width: boxes[i].width}}
-        style={{position: "absolute", top: boxes[i].top, left: boxes[i].left}}
+        properties={{height: 250, width: 250}}
+        style={{position: "absolute", top: Math.floor(i/6)*250, left: (i%6)*250}}
       />)
     }
     return <div id="layout" style={{position: "absolute", left: 0, top: 0, right: 0, bottom: 150}}>{screens}</div>

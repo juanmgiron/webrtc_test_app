@@ -93,7 +93,7 @@ export default function PublisherVideo(props){
 
     return (
         <div id="videos">
-            <OTSession apiKey="47527401" sessionId={props.sessionId} token={props.token} ref={session}>
+            <OTSession apiKey={props.apiKey} sessionId={props.sessionId} token={props.token} ref={session}>
                 <OTPublisher ref={publisher} properties={{name: props.name, mirror: false, height: 480, width: 640}} eventHandlers={eventHandlers}/>
             </OTSession>
             <canvas
@@ -101,8 +101,8 @@ export default function PublisherVideo(props){
                 className="output_canvas"
                 style={{
                     position: "fixed",
-                    left: 8,
-                    top: 6,
+                    left: 0,
+                    top: 0,
                     width: 640,
                     height: 480,
                 }}
