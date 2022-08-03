@@ -27,6 +27,9 @@ export default function CreationPanel() {
                     </Link>
                 </div>
             </div>
+            <div>
+                <p className="lead">Create and use the id to connect to the session from other devices.</p>
+            </div>
         </div>
     )
 }
