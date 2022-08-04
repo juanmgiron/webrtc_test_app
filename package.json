@@ -35,7 +35,7 @@
     "use-sound": "^4.0.1",
     "web-vitals": "^2.1.4"
   },
-  "proxy": "http://localhost:8080",
+  "proxy": "http://sitterpocbackend-env.eba-zb3abxvr.us-east-2.elasticbeanstalk.com",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
