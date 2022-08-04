@@ -14,6 +14,7 @@ export default function Subscriber(){
   const [selected, setSelected] = useState();
   const handsRef = useRef(hands);
   const streamsRef = useRef(streams);
+  const selectedRef = useRef(selected);
   const session = useRef();
 
   useEffect(() => {
@@ -42,6 +43,10 @@ export default function Subscriber(){
       session.current.session.on('streamDestroyed', event => {
         handsRef.current = handsRef.current.filter(data => data.id != event.stream.connection.id);
         setHands(handsRef.current)
+        if (selectedRef.current !== undefined && event.stream.id === streamsRef.current[selectedRef.current].streamId) {
+          selectedRef.current = undefined;
+          setSelected(selectedRef.current)
+        }
         streamsRef.current = streamsRef.current.filter(data => data.id != event.stream.id)
         setStreams(streamsRef.current)
       })
@@ -56,7 +61,7 @@ export default function Subscriber(){
     if (selected === undefined) {
       for (let i = 0; i < count; i++) {
         screens.push(
-        <div onClick={() => setSelected(i)} key={i}>
+        <div onClick={() => modifySelected(i)} key={i}>
           <OTSubscriber
             key={streams[i].id}
             session={session.current.session}
@@ -68,7 +73,7 @@ export default function Subscriber(){
       }
     } else {
       screens.push(
-      <div onClick={() => setSelected(undefined)}>
+      <div onClick={() => modifySelected(undefined)}>
         <OTSubscriber
           key={streams[selected].id}
           session={session.current.session}
@@ -79,6 +84,11 @@ export default function Subscriber(){
       </div>)
     }
     return <div id="layout" style={{position: "absolute", left: 0, top: 0, right: 0, bottom: 150}}>{screens}</div>
+  }
+
+  const modifySelected = (value) => {
+    selectedRef.current = value
+    setSelected(value)
   }
 
   return(
