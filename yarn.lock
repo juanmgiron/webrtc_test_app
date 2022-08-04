@@ -1582,6 +1582,11 @@
   "resolved" "https://registry.npmjs.org/@mediapipe/camera_utils/-/camera_utils-0.3.1640029074.tgz"
   "version" "0.3.1640029074"
 
+"@mediapipe/drawing_utils@^0.3.1620248257":
+  "integrity" "sha512-s598oo1K6C62mX3rWXJ7n1RJFdXjyQn3f6CeI+lU6kD69MVyBcV3hdmO5LnEZlCw5NRDANtaM8WAOuqZHaldLg=="
+  "resolved" "https://registry.npmjs.org/@mediapipe/drawing_utils/-/drawing_utils-0.3.1620248257.tgz"
+  "version" "0.3.1620248257"
+
 "@mediapipe/face_detection@^0.4.1646425229":
   "integrity" "sha512-aeCN+fRAojv9ch3NXorP6r5tcGVLR3/gC1HmtqB0WEZBRXrdP6/3W/sGR0dHr1iT6ueiK95G9PVjbzFosf/hrg=="
   "resolved" "https://registry.npmjs.org/@mediapipe/face_detection/-/face_detection-0.4.1646425229.tgz"
