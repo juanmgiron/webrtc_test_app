@@ -58,6 +58,7 @@ export default function Subscriber(){
   const handleLayout = () => {
     var count = streamsRef.current.length;
     var screens = [];
+    var extraScreens = [];
     if (selected === undefined) {
       for (let i = 0; i < count; i++) {
         screens.push(
@@ -66,8 +67,8 @@ export default function Subscriber(){
             key={streams[i].id}
             session={session.current.session}
             stream={streams[i]}
-            properties={{height: 210, width: 280}}
-            style={{position: "absolute", top: Math.floor(i/6)*210, left: (i%6)*280}}
+            properties={{height: 200, width: 266}}
+            style={{position: "absolute", top: Math.floor(i/7)*200, left: (i%7)*266}}
           />
         </div>)
       }
@@ -82,8 +83,32 @@ export default function Subscriber(){
           style={{position: "absolute", top: 0, left: 0}}
         />
       </div>)
+      var offset = 0;
+      for (let i = 0; i < count; i++) {
+        if (i !== selected) {
+          extraScreens.push(
+            <div onClick={() => modifySelected(i)} key={i}>
+              <OTSubscriber
+                key={streams[i].id}
+                session={session.current.session}
+                stream={streams[i]}
+                properties={{height: 210, width: 280}}
+                style={{position: "absolute", top: Math.floor((i-offset)/2)*210, left: ((i-offset)%2)*280}}
+              />
+            </div>)
+        } else {
+          offset++;
+        }
+      }
     }
-    return <div id="layout" style={{position: "absolute", left: 0, top: 0, right: 0, bottom: 150}}>{screens}</div>
+    return (
+      <div id="layout" style={{position: "absolute", left: 0, top: 0, right: 0, bottom: 150}}>
+        {screens}
+        <div style={{position: "absolute", left: 1200, top: 0, right: 0, bottom: 0, overflow: "auto"}}>
+          {extraScreens}
+        </div>
+      </div>
+    )
   }
 
   const modifySelected = (value) => {
