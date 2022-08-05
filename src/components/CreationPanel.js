@@ -8,6 +8,8 @@ export default function CreationPanel() {
     const handleCreation = () => {
         axios.get('/session').then((result) => {
             setSessionId(result.data)
+        }).catch((error) => {
+            console.log(error)
         })
     }
 

@@ -50,6 +50,8 @@ export default function Subscriber(){
         streamsRef.current = streamsRef.current.filter(data => data.id != event.stream.id)
         setStreams(streamsRef.current)
       })
+    }).catch((error) => {
+      console.log(error)
     })
   },[])
 

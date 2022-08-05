@@ -14,11 +14,12 @@ export default function Publisher(){
     axios.put('/token', {
       id: sessionId
     }).then((result) => {
-      console.log(result)
       setCredentials({
         key: result.data.key,
         token: result.data.token
       })
+    }).catch((error) => {
+      console.log(error)
     })
   },[sessionId])
 
