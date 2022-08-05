@@ -11,7 +11,7 @@ export default function Publisher(){
 
   useEffect(() => {
     name.current = 'user' + Math.floor((Math.random() * 1000) + 1);
-    axios.put('http://sitterpocbackend-env.eba-zb3abxvr.us-east-2.elasticbeanstalk.com/token', {
+    axios.put('https://cors-everywhere.herokuapp.com/http://sitterpocbackend-env.eba-zb3abxvr.us-east-2.elasticbeanstalk.com/token', {
       id: sessionId
     }).then((result) => {
       setCredentials({

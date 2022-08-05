@@ -18,7 +18,7 @@ export default function Subscriber(){
   const session = useRef();
 
   useEffect(() => {
-    axios.put('http://sitterpocbackend-env.eba-zb3abxvr.us-east-2.elasticbeanstalk.com/token', {
+    axios.put('https://cors-everywhere.herokuapp.com/http://sitterpocbackend-env.eba-zb3abxvr.us-east-2.elasticbeanstalk.com/token', {
       id: sessionId
     }).then((result) => {
       session.current = createSession({

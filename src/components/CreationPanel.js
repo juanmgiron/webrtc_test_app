@@ -6,7 +6,7 @@ export default function CreationPanel() {
     const [sessionId, setSessionId] = useState();
 
     const handleCreation = () => {
-        axios.get('http://sitterpocbackend-env.eba-zb3abxvr.us-east-2.elasticbeanstalk.com/session').then((result) => {
+        axios.get('https://cors-everywhere.herokuapp.com/http://sitterpocbackend-env.eba-zb3abxvr.us-east-2.elasticbeanstalk.com/session').then((result) => {
             setSessionId(result.data)
         }).catch((error) => {
             console.log(error)
