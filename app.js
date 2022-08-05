@@ -35,14 +35,14 @@ app.get('/', (req, res) => {
     res.send('Hello World!')
 })
 
-app.post('/createSession', (req, res) => {
+app.get('/session', (req, res) => {
     opentok.createSession(function (err, session) {
         if (err) return console.log(err);
         res.send(session.sessionId)
     });
 })
 
-app.post('/token', (req, res) => {
+app.put('/token', (req, res) => {
     token = opentok.generateToken(req.body.id)
     const results = {
         token,

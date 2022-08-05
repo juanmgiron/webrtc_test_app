@@ -11,15 +11,16 @@ export default function Publisher(){
 
   useEffect(() => {
     name.current = 'user' + Math.floor((Math.random() * 1000) + 1);
-    axios.post('/token', {
+    axios.put('/token', {
       id: sessionId
     }).then((result) => {
+      console.log(result)
       setCredentials({
         key: result.data.key,
         token: result.data.token
       })
     })
-  },[])
+  },[sessionId])
 
   return(
     credentials ?

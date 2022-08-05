@@ -18,7 +18,7 @@ export default function Subscriber(){
   const session = useRef();
 
   useEffect(() => {
-    axios.post('/token', {
+    axios.put('/token', {
       id: sessionId
     }).then((result) => {
       session.current = createSession({

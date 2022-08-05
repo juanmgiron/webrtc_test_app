@@ -6,7 +6,7 @@ export default function CreationPanel() {
     const [sessionId, setSessionId] = useState();
 
     const handleCreation = () => {
-        axios.post('/createSession').then((result) => {
+        axios.get('/session').then((result) => {
             setSessionId(result.data)
         })
     }
