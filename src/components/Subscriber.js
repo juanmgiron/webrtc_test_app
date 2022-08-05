@@ -18,7 +18,7 @@ export default function Subscriber(){
   const session = useRef();
 
   useEffect(() => {
-    axios.put('/token', {
+    axios.put('http://sitterpocbackend-env.eba-zb3abxvr.us-east-2.elasticbeanstalk.com/token', {
       id: sessionId
     }).then((result) => {
       session.current = createSession({
