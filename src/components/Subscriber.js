@@ -1,8 +1,8 @@
-import { createSession, OTSubscriber } from 'opentok-react';
+import { createSession } from 'opentok-react';
 import axios from "axios";
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from "react-router-dom";
-import RaisedHand from './RaisedHand';
+import SubscriberLayout from './SubscriberLayout';
 
 export default function Subscriber(){
   const location = useLocation();
@@ -53,73 +53,21 @@ export default function Subscriber(){
     })
   },[])
 
-  const handleLayout = () => {
-    var count = streamsRef.current.length;
-    var screens = [];
-    var extraScreens = [];
-    if (selected === undefined) {
-      for (let i = 0; i < count; i++) {
-        screens.push(
-        <div onClick={() => modifySelected(i)} key={i}>
-          <OTSubscriber
-            key={streams[i].id}
-            session={session.current.session}
-            stream={streams[i]}
-            properties={{height: 200, width: 266}}
-            style={{position: "absolute", top: Math.floor(i/7)*200, left: (i%7)*266, zIndex: 0}}
-          />
-          <RaisedHand show={hands.includes(streams[i].connection.id)} top={Math.floor(i/7)*200} left={(i%7)*266} />
-        </div>)
-      }
-    } else {
-      screens.push(
-      <div onClick={() => modifySelected(undefined)}>
-        <OTSubscriber
-          key={streams[selected].id}
-          session={session.current.session}
-          stream={streams[selected]}
-          properties={{height: 900, width: 1200}}
-          style={{position: "absolute", top: 0, left: 0}}
-        />
-        <RaisedHand show={hands.includes(streams[selected].connection.id)} top={0} left={0} />
-      </div>)
-      var offset = 0;
-      for (let i = 0; i < count; i++) {
-        if (i !== selected) {
-          extraScreens.push(
-            <div onClick={() => modifySelected(i)} key={i}>
-              <OTSubscriber
-                key={streams[i].id}
-                session={session.current.session}
-                stream={streams[i]}
-                properties={{height: 210, width: 280}}
-                style={{position: "absolute", top: Math.floor((i-offset)/2)*210, left: ((i-offset)%2)*280}}
-              />
-              <RaisedHand show={hands.includes(streams[i].connection.id)} top={Math.floor((i-offset)/2)*210} left={((i-offset)%2)*280} />
-            </div>)
-        } else {
-          offset++;
-        }
-      }
-    }
-    return (
-      <div id="layout" style={{position: "absolute", left: 0, top: 0, right: 0, bottom: 150}}>
-        {screens}
-        <div style={{position: "absolute", left: 1200, top: 0, right: 0, bottom: 0, overflow: "auto"}}>
-          {extraScreens}
-        </div>
-      </div>
-    )
-  }
-
   const modifySelected = (value) => {
     selectedRef.current = value
     setSelected(value)
   }
 
   return(
-    <div>
-      {handleLayout()}
-    </div>
+    streams.length ?
+      <div>
+        <SubscriberLayout
+          streams={streams}
+          selected={selected}
+          modifySelected={modifySelected}
+          session={session.current.session}
+          hands={hands}
+        />
+      </div> : null
   )
 }

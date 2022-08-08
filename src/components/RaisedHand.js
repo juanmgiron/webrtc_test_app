@@ -1,4 +1,4 @@
-import axios from 'axios';
+import React from "react"
 
 export default function RaisedHand(props){
     return(
