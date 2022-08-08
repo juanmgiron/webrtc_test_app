@@ -2,14 +2,12 @@ import { createSession, OTSubscriber } from 'opentok-react';
 import axios from "axios";
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from "react-router-dom";
-import { Button } from '@mui/material';
-import HandsDialog from './HandsDialog';
+import RaisedHand from './RaisedHand';
 
 export default function Subscriber(){
   const location = useLocation();
   const sessionId = location.state.id;
   const [streams, setStreams] = useState([]);
-  const [open, setOpen] = useState(false);
   const [hands, setHands] = useState([])
   const [selected, setSelected] = useState();
   const handsRef = useRef(hands);
@@ -28,12 +26,12 @@ export default function Subscriber(){
         onStreamsUpdated: streams => {}
       })
       session.current.session.on('signal:handUp', event => {
-        var obj = {id: event.from.id, name: event.data.name}
+        var obj = event.from.id
         handsRef.current = [...handsRef.current, obj]
         setHands(handsRef.current)
       })
       session.current.session.on('signal:handDown', event => {
-        handsRef.current = handsRef.current.filter(data => data.id != event.from.id);
+        handsRef.current = handsRef.current.filter(data => data != event.from.id);
         setHands(handsRef.current)
       })
       session.current.session.on('streamCreated', event => {
@@ -41,7 +39,7 @@ export default function Subscriber(){
         setStreams(streamsRef.current)
       })
       session.current.session.on('streamDestroyed', event => {
-        handsRef.current = handsRef.current.filter(data => data.id != event.stream.connection.id);
+        handsRef.current = handsRef.current.filter(data => data != event.stream.connection.id);
         setHands(handsRef.current)
         if (selectedRef.current !== undefined && event.stream.id === streamsRef.current[selectedRef.current].streamId) {
           selectedRef.current = undefined;
@@ -54,8 +52,6 @@ export default function Subscriber(){
       console.log(error)
     })
   },[])
-
-  const handleClose = () => setOpen(false)
 
   const handleLayout = () => {
     var count = streamsRef.current.length;
@@ -70,8 +66,9 @@ export default function Subscriber(){
             session={session.current.session}
             stream={streams[i]}
             properties={{height: 200, width: 266}}
-            style={{position: "absolute", top: Math.floor(i/7)*200, left: (i%7)*266}}
+            style={{position: "absolute", top: Math.floor(i/7)*200, left: (i%7)*266, zIndex: 0}}
           />
+          <RaisedHand show={hands.includes(streams[i].connection.id)} top={Math.floor(i/7)*200} left={(i%7)*266} />
         </div>)
       }
     } else {
@@ -84,6 +81,7 @@ export default function Subscriber(){
           properties={{height: 900, width: 1200}}
           style={{position: "absolute", top: 0, left: 0}}
         />
+        <RaisedHand show={hands.includes(streams[selected].connection.id)} top={0} left={0} />
       </div>)
       var offset = 0;
       for (let i = 0; i < count; i++) {
@@ -97,6 +95,7 @@ export default function Subscriber(){
                 properties={{height: 210, width: 280}}
                 style={{position: "absolute", top: Math.floor((i-offset)/2)*210, left: ((i-offset)%2)*280}}
               />
+              <RaisedHand show={hands.includes(streams[i].connection.id)} top={Math.floor((i-offset)/2)*210} left={((i-offset)%2)*280} />
             </div>)
         } else {
           offset++;
@@ -121,12 +120,6 @@ export default function Subscriber(){
   return(
     <div>
       {handleLayout()}
-      <Button onClick={() => setOpen(true)} variant="outlined" style={{position: "absolute", right: 50, bottom: 50}}>{"Raised hands: " + hands.length}</Button>
-      <HandsDialog 
-        open={open}
-        onClose={handleClose}
-        users={hands}
-      />
     </div>
   )
 }
