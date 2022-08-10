@@ -1,5 +1,5 @@
 import { createSession } from 'opentok-react';
-import axios from "axios";
+import instance from '../axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from "react-router-dom";
 import SubscriberLayout from './SubscriberLayout';
@@ -16,7 +16,7 @@ export default function Subscriber(){
   const session = useRef();
 
   useEffect(() => {
-    axios.put('https://cors-everywhere.herokuapp.com/http://sitterpocbackend-env.eba-zb3abxvr.us-east-2.elasticbeanstalk.com/token', {
+    instance.put('/token', {
       id: sessionId
     }).then((result) => {
       session.current = createSession({

@@ -1,4 +1,4 @@
-import axios from "axios";
+import instance from "../axios";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -6,7 +6,7 @@ export default function CreationPanel() {
     const [sessionId, setSessionId] = useState();
 
     const handleCreation = () => {
-        axios.get('https://cors-everywhere.herokuapp.com/http://sitterpocbackend-env.eba-zb3abxvr.us-east-2.elasticbeanstalk.com/session').then((result) => {
+        instance.get('/session').then((result) => {
             setSessionId(result.data)
         }).catch((error) => {
             console.log(error)
