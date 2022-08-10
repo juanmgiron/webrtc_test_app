@@ -31,7 +31,7 @@ export default function Subscriber(){
         setHands(handsRef.current)
       })
       session.current.session.on('signal:handDown', event => {
-        handsRef.current = handsRef.current.filter(data => data != event.from.id);
+        handsRef.current = handsRef.current.filter(data => data !== event.from.id);
         setHands(handsRef.current)
       })
       session.current.session.on('streamCreated', event => {
@@ -39,19 +39,19 @@ export default function Subscriber(){
         setStreams(streamsRef.current)
       })
       session.current.session.on('streamDestroyed', event => {
-        handsRef.current = handsRef.current.filter(data => data != event.stream.connection.id);
+        handsRef.current = handsRef.current.filter(data => data !== event.stream.connection.id);
         setHands(handsRef.current)
         if (selectedRef.current !== undefined && event.stream.id === streamsRef.current[selectedRef.current].streamId) {
           selectedRef.current = undefined;
           setSelected(selectedRef.current)
         }
-        streamsRef.current = streamsRef.current.filter(data => data.id != event.stream.id)
+        streamsRef.current = streamsRef.current.filter(data => data.id !== event.stream.id)
         setStreams(streamsRef.current)
       })
     }).catch((error) => {
       console.log(error)
     })
-  },[])
+  },[sessionId])
 
   const modifySelected = (value) => {
     selectedRef.current = value
