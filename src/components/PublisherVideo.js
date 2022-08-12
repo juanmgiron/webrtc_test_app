@@ -3,10 +3,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Camera } from "@mediapipe/camera_utils";
 import { Pose } from "@mediapipe/pose";
 import { drawLandmarks } from '@mediapipe/drawing_utils';
+import { FaceDetection } from '@mediapipe/face_detection';
 
 export default function PublisherVideo(props){
     const [video, setVideo] = useState(false);
     const hand = useRef(false);
+    const counter = useRef(0);
     const name = useRef();
     const publisher = useRef();
     const session = useRef();
@@ -23,12 +25,13 @@ export default function PublisherVideo(props){
 
     const handUp = () => sendMessage('handUp')
     const handDown = () => sendMessage('handDown')
+    const onCounterChange = () => sendMessage('counter', counter.current)
 
-    const sendMessage = (type) => {
+    const sendMessage = (type, value) => {
         session.current.sessionHelper.session.signal({
             type: type,
             data: {
-                name: name.current
+                value: value
             }
         }, function(error) {
             if (error) {
@@ -37,7 +40,7 @@ export default function PublisherVideo(props){
         })
     }
 
-    const onResults = (results) => {
+    const onPoseResults = (results) => {
         const canvasElement = canvasRef.current;
         const canvasCtx = canvasElement.getContext('2d')
         canvasCtx.save();
@@ -62,6 +65,13 @@ export default function PublisherVideo(props){
         }
     }
 
+    const onFaceResults = (results) => {
+        if (results.detections.length !== counter.current) {
+            counter.current = results.detections.length
+            onCounterChange()
+        }
+    }
+
     const detectPose = (element) => {
         const pose = new Pose({locateFile: (file) => {
             return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
@@ -74,10 +84,20 @@ export default function PublisherVideo(props){
             minDetectionConfidence: 0.5,
             minTrackingConfidence: 0.5
         });
-        pose.onResults(onResults);
+        const faceDetection = new FaceDetection({locateFile: (file) => {
+            return `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`;
+        }})
+        faceDetection.setOptions({
+            selfieMode: true,
+            model: 'short',
+            minDetectionConfidence: 0.5,
+        });
+        pose.onResults(onPoseResults);
+        faceDetection.onResults(onFaceResults);
         const camera = new Camera(element, {
             onFrame: async () => {
                 await pose.send({image: element});
+                await faceDetection.send({image: element});
             },
             width: 1280,
             height: 720

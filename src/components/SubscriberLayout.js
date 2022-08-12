@@ -19,6 +19,7 @@ export default function SubscriberLayout(props){
                 style={{position: "absolute", top: Math.floor(i/7)*200, left: (i%7)*266, zIndex: 0}}
               />
               <RaisedHand show={props.hands.includes(props.streams[i].connection.id)} top={Math.floor(i/7)*200} left={(i%7)*266} />
+              <h1 style={{top: Math.floor(i/7)*200, left: (i%7)*266, zIndex: 1, position: "absolute"}}>{props.counter[i]}</h1>
             </div>)
           }
         } else {
@@ -32,6 +33,7 @@ export default function SubscriberLayout(props){
               style={{position: "absolute", top: 0, left: 0}}
             />
             <RaisedHand show={props.hands.includes(props.streams[props.selected].connection.id)} top={0} left={0} />
+            <h1 style={{top: 0, left: 0, zIndex: 1, position: "absolute"}}>{props.counter[props.selected]}</h1>
           </div>)
           var offset = 0;
           for (let i = 0; i < count; i++) {
@@ -46,6 +48,7 @@ export default function SubscriberLayout(props){
                     style={{position: "absolute", top: Math.floor((i-offset)/2)*210, left: ((i-offset)%2)*280}}
                   />
                   <RaisedHand show={props.hands.includes(props.streams[i].connection.id)} top={Math.floor((i-offset)/2)*210} left={((i-offset)%2)*280} />
+                  <h1 style={{top: Math.floor((i-offset)/2)*210, left: ((i-offset)%2)*280, zIndex: 1, position: "absolute"}}>{props.counter[i]}</h1>
                 </div>)
             } else {
               offset++;
