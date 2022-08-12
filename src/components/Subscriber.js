@@ -39,7 +39,7 @@ export default function Subscriber(){
       session.current.session.on('signal:counter', event => {
         var index = streamsRef.current.findIndex(data => data.connection.id === event.from.id);
         counterRef.current[index] = event.data.value
-        setCounter(counterRef.current)
+        setCounter([...counterRef.current])
       })
       session.current.session.on('streamCreated', event => {
         streamsRef.current = [...streamsRef.current, event.stream]
